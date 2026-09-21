@@ -1,619 +1,442 @@
 # BizFlow Agentic AI
 
-> **Agentic AI for Customer Sales Automation & Daily Sales Intelligence**
+### Agentic AI + AI Automation for Customer Sales and Sales Intelligence
 
-BizFlow Agentic AI is an **AI-powered business automation system built with n8n** that combines a customer-facing sales agent with an automated daily sales-intelligence pipeline.
+BizFlow Agentic AI is an end-to-end business automation system built with **n8n**. It combines a tool-using customer sales agent with an automated sales intelligence and reporting workflow.
 
-The system is composed of two specialized workflows:
-
-* **Workflow 1 — Customer Sales Agent:** interacts with customers through a chat interface, uses business tools and memory, retrieves product/business information, and creates leads.
-* **Workflow 2 — Daily Sales Intelligence:** automatically reads the day's leads, filters and aggregates records, calculates verified KPIs, generates a structured report with an LLM, and delivers it to the Sales/Management team through email.
-
-The project demonstrates how **AI agents, tool use, workflow orchestration, deterministic data processing, and generative reporting** can be combined into a practical business automation system.
+**Technologies:** n8n · Agentic AI · AI Automation · Groq · LLMs · Google Sheets · Gmail · JavaScript
 
 ---
 
-## 🧩 Project Architecture
+## See the System
 
-```mermaid
-flowchart TB
+The following image shows the actual n8n implementation of both workflows.
 
-    A["👤 Customer"] --> B["💬 Chat Trigger"]
-    B --> C["🤖 AI Agent"]
+![BizFlow Agentic AI — Complete n8n Workflows](./screenshots/bizflow-workflows-overview.png)
 
-    C --> D["⚡ Groq"]
-    C --> E["🧠 Memory"]
-    C --> F["🛠️ Business Tools"]
+**Two workflows. One connected business process.**
 
-    F --> G["📦 Products Table"]
-    F --> H["🏢 Business Info"]
-    F --> I["📝 Create Lead"]
+* **Workflow 1 — Customer Sales Agent:** handles customer conversations, accesses business tools and memory, and creates leads.
+* **Workflow 2 — Sales Intelligence & Reporting:** processes lead data, calculates verified KPIs, generates a report with an LLM, and sends it to the Sales and Management team.
 
-    I --> J["📊 Leads Table"]
 
-    J --> K["⏰ Schedule Trigger"]
-    K --> L["📊 Google Sheets<br/>Read Leads"]
 
-    L --> M["🔎 Filter<br/>Today's Leads"]
-    M --> N["📚 Aggregate<br/>Combine Records"]
-    N --> O["🧮 Code<br/>Calculate Verified KPIs"]
-    O --> P["🧠 Basic LLM Chain<br/>Write + Design Report"]
-    P --> Q["📧 Gmail<br/>HTML Email"]
-    Q --> R["👥 Sales / Management Team"]
-```
+---
 
-### End-to-End Flow
+# What I Built
+
+BizFlow combines two complementary approaches:
+
+| Component                      | Purpose                                                                             |
+| ------------------------------ | ----------------------------------------------------------------------------------- |
+| Customer Sales Agent           | Agentic AI for customer interaction, business tool use, and lead capture            |
+| Sales Intelligence & Reporting | AI automation for data processing, KPI calculation, report generation, and delivery |
+
+The complete flow is:
 
 ```text
 Customer
-   ↓
-Chat Trigger
-   ↓
-AI Agent
-   ├── Groq
-   ├── Memory
-   └── Tools
-        ├── Products Table
-        ├── Business Info
-        └── Create Lead
-                ↓
-           Leads Table
-                ↓
-        [Daily Schedule]
-                ↓
-        Read Lead Records
-                ↓
-         Filter Today's Leads
-                ↓
-          Combine Records
-                ↓
-        Calculate Verified KPIs
-                ↓
-        LLM Report Generation
-                ↓
-            HTML Email
-                ↓
-       Sales / Management Team
+   |
+   v
+Customer Sales Agent
+   |
+   +-- LLM Intelligence Engine
+   +-- Conversation Memory
+   +-- Business Tool Hub
+           |
+           +-- Product Catalog
+           +-- Business Knowledge
+           +-- Lead Capture
+                    |
+                    v
+               Lead Registry
+                    |
+                    v
+          Sales Intelligence
+                    |
+                    v
+          KPI Verification
+                    |
+                    v
+         Report Generation
+                    |
+                    v
+            Report Delivery
+                    |
+                    v
+        Sales / Management Team
 ```
 
 ---
 
-# 🔵 Workflow 1 — BizFlow AI Customer Sales Agent
+# Workflow 1 — Customer Sales Agent
 
 ## Purpose
 
-The Customer Sales Agent handles customer-facing sales interactions through an n8n chat workflow.
+The Customer Sales Agent is the customer-facing part of BizFlow.
 
-Instead of relying only on an LLM's general knowledge, the agent is equipped with **business-specific tools** and **memory** so that it can interact with customers using information stored in the business data layer.
+It uses an AI Agent with an LLM, conversation memory, and business-specific tools to handle customer interactions and capture leads.
 
 ## Workflow
 
 ```text
-                    BIZFLOW AI
-                        │
-                        ▼
-                 ┌──────────────┐
-                 │ Chat Trigger │
-                 └──────┬───────┘
-                        │
-                        ▼
-                 ┌──────────────┐
-                 │   AI Agent   │
-                 └──────┬───────┘
-                        │
-          ┌─────────────┼─────────────┐
-          ▼             ▼             ▼
-        Groq          Memory        Tools
-                                      │
-                           ┌──────────┼──────────┐
-                           ▼          ▼          ▼
-                       Products   Business    Create
-                        Table       Info       Lead
-                                                   │
-                                                   ▼
-                                              Leads Table
+Customer
+   |
+   v
+Customer Chat Entry
+   |
+   v
+BizFlow Sales Agent
+   |
+   +-------------------+-------------------+
+   |                   |                   |
+   v                   v                   v
+LLM Intelligence   Conversation       Business Tool
+     Engine           Memory               Hub
+                                           |
+                             +-------------+-------------+
+                             |             |             |
+                             v             v             v
+                       Product Catalog  Business      Lead Capture
+                                        Knowledge         |
+                                                         v
+                                                    Lead Registry
 ```
+
+## Components
+
+| Component               | Responsibility                                                     |
+| ----------------------- | ------------------------------------------------------------------ |
+| Customer Chat Entry     | Starts the customer conversation                                   |
+| BizFlow Sales Agent     | Orchestrates the customer interaction and uses the available tools |
+| LLM Intelligence Engine | Provides the language-model capability for the agent               |
+| Conversation Memory     | Maintains conversational context                                   |
+| Business Tool Hub       | Provides the agent with access to business-specific capabilities   |
+| Product Catalog         | Provides product information                                       |
+| Business Knowledge      | Provides business information                                      |
+| Lead Capture            | Creates a lead from the customer interaction                       |
+| Lead Registry           | Stores the resulting lead information                              |
+
+## Agent Tools
+
+The agent has access to three business functions:
+
+```text
+BizFlow Sales Agent
+        |
+        v
+Business Tool Hub
+        |
+        +-- Product Catalog
+        |
+        +-- Business Knowledge
+        |
+        +-- Lead Capture
+```
+
+This allows the customer-facing agent to work with business information and perform a lead-capture action instead of functioning only as a conversational interface.
 
 ## Workflow Screenshot
 
-> **Add your n8n workflow screenshot here**
+![Customer Sales Agent](./screenshots/workflow-01-customer-sales-agent.png)
 
-```markdown
-![Workflow 1 — Customer Sales Agent](./screenshots/workflow-01-customer-sales-agent.png)
-```
+
 
 ---
 
-## Node Responsibilities
-
-| Component          | Role                                                                               |
-| ------------------ | ---------------------------------------------------------------------------------- |
-| **Chat Trigger**   | Starts the customer interaction                                                    |
-| **AI Agent**       | Orchestrates the customer conversation and decides when available tools are needed |
-| **Groq**           | Provides the language-model reasoning/generation layer                             |
-| **Memory**         | Maintains conversational context                                                   |
-| **Products Table** | Provides product-related information to the agent                                  |
-| **Business Info**  | Provides business-specific information                                             |
-| **Create Lead**    | Creates a new lead when customer information should be captured                    |
-| **Leads Table**    | Stores created lead information for later sales intelligence                       |
-
----
-
-## 🛠️ Tool-Using Agent
-
-A key feature of Workflow 1 is that the AI Agent is connected to business tools.
-
-```text
-                 AI Agent
-                    │
-          ┌─────────┼─────────┐
-          │         │         │
-          ▼         ▼         ▼
-      Products   Business   Create Lead
-       Table       Info
-```
-
-This allows the agent to move beyond a generic conversational chatbot and interact with structured business information.
-
----
-
-## 🧠 Memory
-
-The agent includes a memory component to maintain conversational context during customer interactions.
-
-```text
-Customer Message
-       ↓
-   AI Agent
-       ↕
-    Memory
-       ↓
- Context-aware response
-```
-
----
-
-## 📦 Product & Business Information
-
-The agent can access structured business information through its connected tools.
-
-This allows customer responses to be grounded in the information available to the business rather than requiring all information to be embedded directly inside the prompt.
-
----
-
-## 📝 Lead Creation
-
-When a customer becomes a potential sales lead, the workflow can use the **Create Lead** tool to write the lead information into the Leads Table.
-
-```text
-Customer Conversation
-        ↓
-   Potential Lead
-        ↓
-    Create Lead
-        ↓
-    Leads Table
-```
-
-The resulting lead records become an important input for Workflow 2.
-
----
-
-# 🟢 Workflow 2 — BizFlow AI Daily Sales Intelligence
+# Workflow 2 — Sales Intelligence & Reporting
 
 ## Purpose
 
-The second workflow is an automated internal sales-intelligence pipeline.
+The second workflow automates the internal sales reporting process.
 
-It runs on a schedule, reads lead records, isolates the current day's leads, aggregates them, calculates verified KPIs, and then uses an LLM to produce a readable HTML report.
+It reads lead data, processes the records, calculates verified KPIs programmatically, uses an LLM to write and design the report, and sends the final report through Gmail.
 
 ## Workflow
 
 ```text
-              DAILY SALES INTELLIGENCE
-
-Schedule Trigger
-       │
-       ▼
-Google Sheets
-   Read Leads
-       │
-       ▼
-Filter
- Today's Leads
-       │
-       ▼
-Aggregate
- Combine Records
-       │
-       ▼
-Code
- Calculate Verified KPIs
-       │
-       ▼
-Basic LLM Chain
- Write + Design Report
-       │
-       ▼
-Gmail
- HTML Email
-       │
-       ▼
+Daily Intelligence Scheduler
+          |
+          v
+Lead Data Connector
+          |
+          v
+Lead Filter
+          |
+          v
+Lead Data Aggregator
+          |
+          v
+KPI Verification Engine
+          |
+          v
+Intelligence Report Composer
+          |
+          v
+Report Delivery
+          |
+          v
 Sales / Management Team
 ```
 
-## Workflow Screenshot
+## Components
 
-> **Add your n8n workflow screenshot here**
+| Component                    | Responsibility                                                   |
+| ---------------------------- | ---------------------------------------------------------------- |
+| Daily Intelligence Scheduler | Starts the reporting workflow on schedule                        |
+| Lead Data Connector          | Reads lead records from Google Sheets                            |
+| Lead Filter                  | Filters the required lead records                                |
+| Lead Data Aggregator         | Combines the selected records for processing                     |
+| KPI Verification Engine      | Calculates the required sales KPIs programmatically              |
+| Intelligence Report Composer | Uses an LLM to write and structure the sales intelligence report |
+| Report Delivery              | Sends the final HTML report through Gmail                        |
 
-```markdown
-![Workflow 2 — Daily Sales Intelligence](./screenshots/workflow-02-daily-sales-intelligence.png)
-```
+## Data and AI Separation
 
----
-
-## Node Responsibilities
-
-| Component                          | Role                                                         |
-| ---------------------------------- | ------------------------------------------------------------ |
-| **Schedule Trigger**               | Automatically starts the workflow                            |
-| **Google Sheets — Read Leads**     | Retrieves the available lead records                         |
-| **Filter — Today's Leads**         | Selects records corresponding to the current day             |
-| **Aggregate — Combine Records**    | Combines the selected lead records for downstream processing |
-| **Code — Calculate Verified KPIs** | Performs deterministic KPI calculations                      |
-| **Basic LLM Chain**                | Converts the calculated data into a readable sales report    |
-| **Gmail — HTML Email**             | Sends the final report to the Sales / Management team        |
-
----
-
-# 🧮 Deterministic KPI Calculation
-
-An important design decision in Workflow 2 is the separation between **calculation** and **language generation**.
-
-The Code node is responsible for calculating the verified KPI values before the LLM generates the report.
+A deliberate part of the design is the separation between **calculation** and **report generation**.
 
 ```text
 Lead Records
-     ↓
-Filter
-     ↓
-Aggregate
-     ↓
-Code
-     │
-     ├── Verified KPI calculations
-     │
-     ▼
-Basic LLM Chain
-     │
-     └── Report writing + presentation
+     |
+     v
+Lead Processing
+     |
+     v
+KPI Verification Engine
+     |
+     v
+Verified KPI Data
+     |
+     v
+Intelligence Report Composer
+     |
+     v
+HTML Report
+     |
+     v
+Gmail
 ```
 
-This prevents the core numerical metrics from depending on the LLM's arithmetic or interpretation.
+The Code node performs the KPI calculations, while the LLM is used to write and structure the resulting report.
+
+## Workflow Screenshot
+
+![Sales Intelligence and Reporting](./screenshots/workflow-02-sales-intelligence-reporting.png)
+
+
 
 ---
 
-# 🧠 LLM Report Generation
+# Final Output
 
-After the KPI calculation stage, the **Basic LLM Chain** receives the prepared information and generates the daily sales-intelligence report.
+The workflow produces a sales intelligence report and delivers it to the intended Sales and Management recipients through Gmail.
 
-Its responsibility is primarily:
+![Generated Sales Intelligence Report](./screenshots/daily-sales-report.png)
 
-```text
-Verified Data
-      ↓
-LLM
-      ↓
-Written Business Report
-      ↓
-HTML Formatting
-```
 
-The LLM is therefore used for **communication and report generation**, while deterministic calculations are handled by the Code node.
 
 ---
 
-# 📧 Automated Email Delivery
+# Architecture
 
-The final report is sent through Gmail as an HTML email.
+```mermaid
+flowchart LR
+
+    A["Customer"] --> B["Customer Chat Entry"]
+    B --> C["BizFlow Sales Agent"]
+
+    C --> D["LLM Intelligence Engine"]
+    C --> E["Conversation Memory"]
+    C --> F["Business Tool Hub"]
+
+    F --> G["Product Catalog"]
+    F --> H["Business Knowledge"]
+    F --> I["Lead Capture"]
+
+    I --> J["Lead Registry"]
+
+    J --> K["Daily Intelligence Scheduler"]
+    K --> L["Lead Data Connector"]
+    L --> M["Lead Filter"]
+    M --> N["Lead Data Aggregator"]
+    N --> O["KPI Verification Engine"]
+    O --> P["Intelligence Report Composer"]
+    P --> Q["Report Delivery"]
+    Q --> R["Sales / Management Team"]
+```
+
+---
+
+# Agentic AI
+
+Workflow 1 demonstrates the agentic side of the system.
+
+The **BizFlow Sales Agent** is connected to:
+
+* an LLM
+* conversation memory
+* business-specific tools
+
+The agent can use these tools as part of the customer interaction rather than depending only on a fixed conversational response.
 
 ```text
+Customer
+   |
+   v
+BizFlow Sales Agent
+   |
+   +-- LLM
+   +-- Memory
+   +-- Business Tools
+          |
+          +-- Product Catalog
+          +-- Business Knowledge
+          +-- Lead Capture
+```
+
+---
+
+# AI Automation
+
+Workflow 2 demonstrates the automation side of the system.
+
+The workflow executes a repeatable business process without requiring manual preparation of the daily report.
+
+```text
+Scheduled Execution
+       |
+       v
+Lead Data
+       |
+       v
+Processing
+       |
+       v
 Verified KPIs
-     ↓
-LLM Report
-     ↓
-HTML Email
-     ↓
-Sales / Management Team
+       |
+       v
+AI Report Generation
+       |
+       v
+Automated Email Delivery
 ```
 
-This removes the need for manually preparing and distributing the daily report.
-
-## Email Output Screenshot
-
-> **Add your generated report screenshot here**
-
-```markdown
-![Daily Sales Intelligence Report](./screenshots/daily-sales-report.png)
-```
+This combines deterministic data processing with LLM-based report generation.
 
 ---
 
-# 🔗 How the Two Workflows Work Together
+# Why BizFlow
 
-The two workflows form a single business process.
+BizFlow was designed around a practical sales workflow:
 
-### Workflow 1
+**Customer interaction generates lead data, and lead data becomes organized sales intelligence.**
 
-**Customer interaction → business tools → lead creation**
+The project therefore connects two different uses of AI:
 
-### Workflow 2
+**Agentic AI**
 
-**Lead records → KPI calculation → AI report → management email**
+Intelligent customer interaction, memory, and business tool use.
 
-Combined:
+**AI Automation**
 
-```text
-┌──────────────────────────────────────────────┐
-│                BIZFLOW AGENTIC AI            │
-└──────────────────────────────────────────────┘
+Scheduled processing, KPI calculation, report generation, and automated delivery.
 
-              CUSTOMER LAYER
-                   │
-                   ▼
-            Customer Sales Agent
-                   │
-          ┌────────┼────────┐
-          ▼        ▼        ▼
-       Product  Business  Create Lead
-        Info      Info        │
-                              ▼
-                         Leads Table
-                              │
-                    ┌─────────┘
-                    │
-                    ▼
-              DAILY INTELLIGENCE
-                    │
-              Read Lead Data
-                    ↓
-              Today's Leads
-                    ↓
-             Aggregate Records
-                    ↓
-             Verified KPIs
-                    ↓
-              LLM Report
-                    ↓
-              HTML Email
-                    ↓
-          Sales / Management Team
-```
+Together, they form a connected business automation workflow rather than an isolated AI chatbot.
 
 ---
 
-# 🎯 Business Use Case
+# Technology Stack
 
-BizFlow Agentic AI is designed around a simple business problem:
-
-> **How can a business automate customer sales interactions while continuously converting incoming lead data into useful daily sales intelligence?**
-
-The solution connects the customer-facing and internal-sales sides of the process.
-
-### Customer side
-
-The AI Agent can interact with customers and access:
-
-* Product information
-* Business information
-* Conversational memory
-* Lead creation functionality
-
-### Internal side
-
-The reporting workflow can:
-
-* Read lead records
-* Focus on today's leads
-* Aggregate records
-* Calculate verified KPIs
-* Generate a structured report
-* Deliver the report automatically by email
+| Technology    | Use                                        |
+| ------------- | ------------------------------------------ |
+| n8n           | Workflow orchestration and automation      |
+| Groq          | LLM inference for the customer sales agent |
+| LLM           | Customer interaction and report generation |
+| Google Sheets | Product, business, and lead data           |
+| Gmail         | Automated report delivery                  |
+| JavaScript    | KPI calculation and data processing        |
 
 ---
 
-# ⚙️ Technology Stack
-
-| Technology                 | Role                                           |
-| -------------------------- | ---------------------------------------------- |
-| **n8n**                    | Workflow orchestration and automation          |
-| **Groq**                   | LLM inference for the customer-facing AI agent |
-| **Google Sheets**          | Product/business/lead data layer               |
-| **Gmail**                  | Automated report delivery                      |
-| **LLM / Generative AI**    | Conversational responses and report generation |
-| **JavaScript / Code Node** | Deterministic KPI calculation                  |
-
----
-
-# 🧱 Repository Structure
+# Repository Structure
 
 ```text
 BizFlow-Agentic-AI/
-│
+|
 ├── workflows/
-│   ├── 01-customer-sales-agent.json
-│   └── 02-daily-sales-intelligence.json
-│
+|   ├── 01-customer-sales-agent.json
+|   └── 02-sales-intelligence-reporting.json
+|
 ├── screenshots/
-│   ├── workflow-01-customer-sales-agent.png
-│   ├── workflow-02-daily-sales-intelligence.png
-│   ├── workflow-01-ai-agent.png
-│   ├── workflow-01-tools.png
-│   ├── workflow-02-kpi-calculation.png
-│   └── daily-sales-report.png
-│
-├── docs/
-│   └── architecture.md
-│
+|   ├── bizflow-workflows-overview.png
+|   ├── workflow-01-customer-sales-agent.png
+|   ├── workflow-02-sales-intelligence-reporting.png
+|   └── daily-sales-report.png
+|
 ├── README.md
 └── LICENSE
 ```
 
 ---
 
-# 📸 Project Screenshots
+# Running the Workflows
 
-## Workflow 1 — Customer Sales Agent
+1. Import the workflow JSON files into an n8n instance.
+2. Configure the required credentials and connections.
+3. Connect the required Google Sheets, Groq, and Gmail resources.
+4. Review the workflow configuration.
+5. Execute the workflows using your own environment and data.
 
-```markdown
-![Customer Sales Agent](./screenshots/workflow-01-customer-sales-agent.png)
-```
-
-## Workflow 2 — Daily Sales Intelligence
-
-```markdown
-![Daily Sales Intelligence](./screenshots/workflow-02-daily-sales-intelligence.png)
-```
-
-## AI Agent Configuration
-
-```markdown
-![AI Agent Configuration](./screenshots/workflow-01-ai-agent.png)
-```
-
-## Business Tools
-
-```markdown
-![Business Tools](./screenshots/workflow-01-tools.png)
-```
-
-## KPI Calculation
-
-```markdown
-![KPI Calculation](./screenshots/workflow-02-kpi-calculation.png)
-```
-
-## Generated Report
-
-```markdown
-![Generated Report](./screenshots/daily-sales-report.png)
-```
-
-> Replace the image filenames above with your actual screenshot filenames later if you choose different names.
+Do not upload API keys, passwords, access tokens, or other credentials to the repository.
 
 ---
 
-# 🔍 How to Inspect the n8n Workflows
+# Security
 
-The repository contains the exported n8n workflow JSON files.
+Credentials should be managed through n8n's credential system or environment configuration.
 
-```text
-workflows/
-├── 01-customer-sales-agent.json
-└── 02-daily-sales-intelligence.json
-```
-
-To inspect the implementation:
-
-1. Open the JSON workflow file.
-2. Import it into an n8n instance.
-3. Review the node connections and configurations.
-4. Configure your own credentials and data sources.
-5. Execute the workflow using your own environment.
+Sensitive information should never be hard-coded into the workflow files.
 
 ---
 
-# 🔐 Security
+# Current Scope
 
-This repository should **never contain credentials or secret values**.
+BizFlow currently includes:
 
-Do not commit:
+**Customer Sales Agent**
 
-```text
-API Keys
-Access Tokens
-Passwords
-OAuth Secrets
-Private Credentials
-Webhook Secrets
-```
+Customer interaction, business information access, conversational memory, and lead capture.
 
-Use n8n credential management and environment configuration for sensitive values.
+**Sales Intelligence & Reporting**
+
+Lead retrieval, filtering, aggregation, KPI verification, AI report generation, and automated Gmail delivery.
 
 ---
 
-# 🚧 Current Scope
+# Future Extensions
 
-The current implementation focuses on two business processes:
-
-```text
-1. Customer Sales Interaction
-2. Daily Sales Intelligence
-```
-
-The project intentionally separates customer interaction from internal reporting.
-
-The current workflows do not claim to replace a complete CRM or sales-management platform.
+Possible extensions include CRM integration, lead scoring, sales follow-up automation, additional communication channels, historical sales analytics, and human approval steps.
 
 ---
 
-# 🔮 Future Extensions
-
-Possible extensions include:
-
-* CRM integration
-* Automated lead scoring
-* Lead prioritization
-* Customer follow-up automation
-* Sales pipeline tracking
-* Slack or Microsoft Teams notifications
-* Historical sales analytics
-* Human approval steps before high-impact actions
-* Additional specialized business agents
-
----
-
-# 📌 Project Highlights
-
-### Agentic AI
-
-A tool-using customer-facing AI agent capable of interacting with structured business resources and creating leads.
-
-### Business Automation
-
-n8n connects customer interaction, data storage, KPI processing, reporting, and communication.
-
-### Deterministic + Generative Architecture
-
-Core KPI calculations are handled programmatically, while the LLM focuses on language generation and report presentation.
-
-### End-to-End Workflow
-
-The project connects customer conversations to operational sales intelligence.
-
----
-
-# 👨‍💻 Author
+# Author
 
 **Irfan Ferdous Siam**
 
-Computer Science & Engineering Undergraduate
-AI/ML & NLP Enthusiast
+Computer Science and Engineering Undergraduate
 
-**Portfolio:**
-https://irfanferdous.netlify.app/
+Portfolio: https://irfanferdous.netlify.app/
 
-**GitHub:**
-https://github.com/IrfanTech-X
+GitHub: https://github.com/IrfanTech-X
 
-**LinkedIn:**
-https://linkedin.com/in/irfan-ferdous-siam
+LinkedIn: https://linkedin.com/in/irfan-ferdous-siam
 
 ---
 
-## ⭐ Project
+## Project Summary
 
 **BizFlow Agentic AI**
-*Agentic AI for Customer Sales Automation & Daily Sales Intelligence*
 
-**Built with:** n8n • Groq • Google Sheets • Gmail • LLMs • JavaScript
+Agentic AI + AI Automation for Customer Sales and Sales Intelligence
+
+**Built with:** n8n, Groq, LLMs, Google Sheets, Gmail, and JavaScript
