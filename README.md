@@ -19,8 +19,6 @@ The following image shows the actual n8n implementation of both workflows.
 * **Workflow 1 — Customer Sales Agent:** handles customer conversations, accesses business tools and memory, and creates leads.
 * **Workflow 2 — Sales Intelligence & Reporting:** processes lead data, calculates verified KPIs, generates a report with an LLM, and sends it to the Sales and Management team.
 
-
-
 ---
 
 # What I Built
@@ -70,6 +68,10 @@ Customer Sales Agent
 ---
 
 # Workflow 1 — Customer Sales Agent
+
+![Customer Sales Agent Workflow](./screenshots/workflow-01-customer-sales-agent.png)
+
+
 
 ## Purpose
 
@@ -136,15 +138,13 @@ Business Tool Hub
 
 This allows the customer-facing agent to work with business information and perform a lead-capture action instead of functioning only as a conversational interface.
 
-## Workflow Screenshot
-
-![Customer Sales Agent](./screenshots/workflow-01-customer-sales-agent.png)
-
-
-
 ---
 
 # Workflow 2 — Sales Intelligence & Reporting
+
+![Sales Intelligence and Reporting Workflow](./screenshots/workflow-02-sales-intelligence-reporting.png)
+
+
 
 ## Purpose
 
@@ -219,12 +219,6 @@ Gmail
 
 The Code node performs the KPI calculations, while the LLM is used to write and structure the resulting report.
 
-## Workflow Screenshot
-
-![Sales Intelligence and Reporting](./screenshots/workflow-02-sales-intelligence-reporting.png)
-
-
-
 ---
 
 # Final Output
@@ -267,17 +261,17 @@ flowchart LR
 
 ---
 
-# Agentic AI
+# Agentic AI Use Case
 
-Workflow 1 demonstrates the agentic side of the system.
+Workflow 1 demonstrates the **Agentic AI** side of BizFlow.
 
-The **BizFlow Sales Agent** is connected to:
+The BizFlow Sales Agent is connected to:
 
 * an LLM
 * conversation memory
 * business-specific tools
 
-The agent can use these tools as part of the customer interaction rather than depending only on a fixed conversational response.
+The agent can use these tools during the customer interaction rather than depending only on a fixed conversational response.
 
 ```text
 Customer
@@ -294,13 +288,19 @@ BizFlow Sales Agent
           +-- Lead Capture
 ```
 
+### Business Use Case
+
+The customer-facing agent can:
+
+**understand the customer request → access relevant business information → maintain conversation context → capture a lead when required.**
+
 ---
 
-# AI Automation
+# AI Automation Use Case
 
-Workflow 2 demonstrates the automation side of the system.
+Workflow 2 demonstrates the **AI Automation** side of BizFlow.
 
-The workflow executes a repeatable business process without requiring manual preparation of the daily report.
+The workflow automates a repeatable internal sales process:
 
 ```text
 Scheduled Execution
@@ -309,7 +309,7 @@ Scheduled Execution
 Lead Data
        |
        v
-Processing
+Lead Processing
        |
        v
 Verified KPIs
@@ -321,27 +321,49 @@ AI Report Generation
 Automated Email Delivery
 ```
 
-This combines deterministic data processing with LLM-based report generation.
+### Business Use Case
+
+Instead of manually collecting lead information, calculating sales metrics, preparing a report, and sending it to the team, the workflow performs these steps automatically.
+
+The process is:
+
+**retrieve data → process records → calculate verified KPIs → generate the report with an LLM → deliver the report by email.**
 
 ---
 
-# Why BizFlow
+# How the Two Work Together
 
-BizFlow was designed around a practical sales workflow:
+The two workflows are connected through the lead data layer.
 
-**Customer interaction generates lead data, and lead data becomes organized sales intelligence.**
+```text
+                 AGENTIC AI
+                     |
+             Customer Interaction
+                     |
+                     v
+                Lead Capture
+                     |
+                     v
+                Lead Registry
+                     |
+                     v
+                AI AUTOMATION
+                     |
+              Sales Processing
+                     |
+                     v
+             KPI Verification
+                     |
+                     v
+             AI Report Generation
+                     |
+                     v
+             Automated Delivery
+```
 
-The project therefore connects two different uses of AI:
+This creates an end-to-end process from:
 
-**Agentic AI**
-
-Intelligent customer interaction, memory, and business tool use.
-
-**AI Automation**
-
-Scheduled processing, KPI calculation, report generation, and automated delivery.
-
-Together, they form a connected business automation workflow rather than an isolated AI chatbot.
+**Customer Conversation → Lead Capture → Sales Intelligence → Management Report**
 
 ---
 
@@ -401,13 +423,11 @@ Sensitive information should never be hard-coded into the workflow files.
 
 # Current Scope
 
-BizFlow currently includes:
-
-**Customer Sales Agent**
+### Customer Sales Agent
 
 Customer interaction, business information access, conversational memory, and lead capture.
 
-**Sales Intelligence & Reporting**
+### Sales Intelligence & Reporting
 
 Lead retrieval, filtering, aggregation, KPI verification, AI report generation, and automated Gmail delivery.
 
@@ -415,7 +435,14 @@ Lead retrieval, filtering, aggregation, KPI verification, AI report generation, 
 
 # Future Extensions
 
-Possible extensions include CRM integration, lead scoring, sales follow-up automation, additional communication channels, historical sales analytics, and human approval steps.
+Possible extensions include:
+
+* CRM integration
+* Lead scoring
+* Sales follow-up automation
+* Additional communication channels
+* Historical sales analytics
+* Human approval steps
 
 ---
 
